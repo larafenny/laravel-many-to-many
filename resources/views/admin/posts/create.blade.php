@@ -61,6 +61,23 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     </div>
+
+                    <div class="form-group">
+                        <label>Tags</label>
+                        @foreach ($tags as $tag)
+                            <div class="row align-items-center">
+                                <input class="mx-2" type="checkbox" value="{{ $tag->id }}" name="tags[]"
+                                {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} />
+                                <div class="form-check-label">{{ $tag->name }}</div>
+                            </div>
+                        @endforeach
+
+                        @error('tags')
+                        <div class="invalid-tags">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">
                             Crea post

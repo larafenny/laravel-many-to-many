@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -29,11 +30,19 @@ class PostController extends Controller
      */
     public function create()
    {
+
         //prendo tutte le categorie
         $categories = Category::all();
+        //prendo tutti i tag
+        $tags = Tag::all();
 
-        //passiamo le categorie alla view e ritorna la view
-        return view('admin.posts.create', compact('categories'));
+        //passiamo le categorie e i tag alla view e ritorna la view
+        return view('admin.posts.create', compact('categories', 'tags'));
+
+
+
+
+
    }
 
     /**
@@ -47,14 +56,16 @@ class PostController extends Controller
        $request->validate([
            'title'=> 'required|max:250',
            'content'=> 'required|min:5',
-           'category_id' => 'required|exists:categories,id'
+           'category_id' => 'required|exists:categories,id',
+           'tags' => 'exists:tags,id',
        ],
        [    //messaggi di errore dei requisiti sopra
            'title.required' =>'Titolo deve essere valorizzato.',
            'title.max' =>'Hai superato i 250 caratteri.',
            'content.required' => 'Il contenuto deve essere compilato.',
            'content.min' => 'Minimo 5 caratteri.',
-           'category_id.exists' => 'La categoria selezionata non esiste'
+           'category_id.exists' => 'La categoria selezionata non esiste',
+           'tags'=>'Tag non esiste'
        ]);
 
        $postData = $request->all();
@@ -71,6 +82,7 @@ class PostController extends Controller
        $postFound = Post::where('slug', $alternativeSlug)->first();
        //metto un counter
        $counter = 1;
+
        //faccio ciclo while per verificare se $postFound e quindi lo slug è presente nel DB, e quindi è già stato usato. se si aggiunge un numero
        /*
        while($postFound){
@@ -90,6 +102,13 @@ class PostController extends Controller
        //salviamo il post
        $newPost->save();
 
+       //dd($postData);
+       //Aggiungo tag
+       /*
+        if(array_key_exists('tags', $postData)) {
+            $newPost->tags()->sync($postData['tags']);
+        }
+*/
        //facciamo un redirect alla lista dei post
        return redirect()->route('admin.posts.index');
 
@@ -108,6 +127,7 @@ class PostController extends Controller
         }
         $category = Category::find($post->category_id);
         return view('admin.posts.show', compact('post', 'category'));
+
     }
 
     /**
@@ -126,7 +146,13 @@ class PostController extends Controller
         //prendo tutte le categorie
         $categories = Category::all();
 
-        return view('admin.posts.edit', compact('post', 'categories'));
+        //prendo tutti i tag
+        $tags = Tag::all();
+
+
+
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**

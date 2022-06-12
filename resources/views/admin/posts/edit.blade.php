@@ -64,6 +64,27 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     </div>
+
+
+                    <div>Tags</div>
+                        @foreach ($tags as $tag)
+                            @if ($errors->any())
+                                <input type="checkbox" value="{{ $tag->id }}" name="tags[]"
+                                    {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} />
+                            @else
+                                <input type="checkbox" value="{{ $tag->id }}" name="tags[]"
+                                    {{ $post->tags->contains($tag) ? 'checked' : '' }} />
+                                <div class="form-check-label">{{ $tag->name }}</div>
+                            @endif
+                        @endforeach
+
+
+                @error('tags')
+                    <div class="invalid-feedback"> {{ $message }}</div>
+                @enderror
+
+
+
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">
                             Modifica post

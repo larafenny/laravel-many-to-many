@@ -13,22 +13,21 @@ class CreatePostTagTable extends Migration
      */
     public function up()
     {
-        Schema::create('post_tag', function (Blueprint $table) {
-            //$table->id();
-            //$table->timestamps();
 
-            //genero colonna post_id
-            $table->unsignedBigInteger('post_id');
-            //definisco la relazione tra la colonna post_id appena generata che è una chiave esterna che si riferisce a id sulla colonna posts
-            $table->foreign('post_id')->references('id')->on('posts');
+        if(!Schema::hasTable('post_tag')){
+            Schema::create('post_tag', function (Blueprint $table) {
+                if(!Schema::hasColumn('post_tag','post_id')) {
+                    $table->unsignedBigInteger('post_id');
+                    $table->foreign('post_id')->references('id')->on('posts');
+                }
 
-            //genero colonna tag_id
-            $table->unsignedBigInteger('tag_id');
-            //definisco la relazione tra la colonna tag_id appena generata che è una chiave esterna che si riferisce a id sulla colonna posts
-            $table->foreign('tag_id')->references('id')->on('tags');
+                if(!Schema::hasColumn('post_tag', 'tag_id')) {
+                    $table->unsignedBigInteger('tag_id');
+                    $table->foreign('tag_id')->references('id')->on('tags');
+                }
+            });
+        }
 
-
-        });
     }
 
     /**
