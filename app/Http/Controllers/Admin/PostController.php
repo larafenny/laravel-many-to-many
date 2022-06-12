@@ -47,7 +47,7 @@ class PostController extends Controller
        $request->validate([
            'title'=> 'required|max:250',
            'content'=> 'required|min:5',
-           'category' => 'required|exists:categories,id'
+           'category_id' => 'required|exists:categories,id'
        ],
        [    //messaggi di errore dei requisiti sopra
            'title.required' =>'Titolo deve essere valorizzato.',

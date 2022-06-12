@@ -15,6 +15,11 @@ class Post extends Model
         return $this->belongsTo('App\Category');
     }
 
+    //creo relazione many to many tra post e tag
+    public function tags(){
+        return $this->belongsToMany('App\Tag');
+    }
+
     //input una stringa e restituisce uno slug univoco
     public static function convertToSlug($title){
         $slugPrefix = Str::slug($title);
